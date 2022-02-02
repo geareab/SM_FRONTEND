@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import { CContainer, CSpinner } from '@coreui/react'
+import { CContainer, CSpinner, } from '@coreui/react'
 
 // routes config
 import routes from '../routes'
@@ -8,7 +8,7 @@ import routes from '../routes'
 const AppContent = () => {
   return (
     <CContainer lg>
-      <Suspense fallback={<CSpinner color="primary" />}>
+      <Suspense fallback={<span className="d-flex justify-content-center"><CSpinner color="primary" /></span>}>
         <Switch>
           {routes.map((route, idx) => {
             return (
@@ -27,7 +27,7 @@ const AppContent = () => {
               )
             )
           })}
-          <Redirect from="/" to="/dashboard" />
+          <Redirect from="/" to="/search" />
         </Switch>
       </Suspense>
     </CContainer>
