@@ -28,6 +28,7 @@
     "coreui_library_short_version": "4.1"
   },
   "dependencies": {
+    "axios": "^1.5.0",
     "@coreui/chartjs": "^3.0.0",
     "@coreui/coreui": "^4.1.0",
     "@coreui/icons": "^2.1.0",
@@ -46,15 +47,15 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
-    "redux": "4.1.2",
+    "redux": "^4.1.2",
     "simplebar-react": "^2.3.6"
   },
   "devDependencies": {
-    "auto-changelog": "~2.3.0",
+    "auto-changelog": "^2.3.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "2.5.0",
+    "prettier": "^2.5.0",
     "react-scripts": "^4.0.3",
     "sass": "^1.43.5"
   },

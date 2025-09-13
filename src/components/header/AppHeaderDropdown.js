@@ -1,4 +1,6 @@
+// src/components/AppHeaderDropdown.js
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import {
   CAvatar,
   CBadge,
@@ -25,6 +27,15 @@ import CIcon from '@coreui/icons-react'
 import avatar8 from '../../assets/images/avatars/jamesReverson.svg'
 
 const AppHeaderDropdown = () => {
+  const history = useHistory()
+
+  const handleLogout = () => {
+    // Clear the token from localStorage
+    localStorage.removeItem('token')
+    // Redirect to login page
+    history.push('/login')
+  }
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
@@ -60,6 +71,7 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem>
+
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilUser} className="me-2" />
@@ -83,8 +95,11 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem>
+
         <CDropdownDivider />
-        <CDropdownItem href="#">
+
+        {/* Logout / Lock Account */}
+        <CDropdownItem onClick={handleLogout}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Lock Account
         </CDropdownItem>
