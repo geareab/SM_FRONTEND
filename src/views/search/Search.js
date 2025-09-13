@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import {
   CCol,
   CRow,
@@ -7,61 +6,94 @@ import {
   CAccordionHeader,
   CAccordionBody,
   CAccordion,
+  CInputGroup,
+  CInputGroupText,
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilSearch } from '@coreui/icons'
 
 const SearchResults = () => {
-  const location = useLocation()
-  const params = new URLSearchParams(location.search)
-  const searchTerm = params.get('query') || ''
-
+  const [searchTerm, setSearchTerm] = useState('')
   const [tableData, setTableData] = useState([])
   const token = localStorage.getItem('token') || ''
 
   useEffect(() => {
-    if (!searchTerm) return
-    let isMounted = true
-    const controller = new AbortController()
-
-    fetch(
-      `https://salusback.geareab.com/item/amount/10/name/${encodeURIComponent(searchTerm)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        signal: controller.signal,
-      }
-    )
-      .then(async (res) => {
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}))
-          console.error('API Error:', res.status, errData)
-          return
-        }
-        return res.json()
-      })
-      .then((data) => {
-        if (data && isMounted) setTableData(data)
-      })
-      .catch((err) => {
-        if (err.name !== 'AbortError') console.error('Fetch error:', err)
-      })
-
-    return () => {
-      isMounted = false
-      controller.abort()
+    if (!searchTerm) {
+      setTableData([])
+      return
     }
+
+    const delayDebounceFn = setTimeout(() => {
+      const controller = new AbortController()
+      let isMounted = true
+
+      fetch(
+        `https://salusback.geareab.com/item/amount/10/name/${encodeURIComponent(searchTerm)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal,
+        }
+      )
+        .then(async (res) => {
+          let data
+          try {
+            data = await res.json()
+          } catch {
+            data = null
+          }
+
+          if (!res.ok) {
+            console.error('API Error:', res.status, data)
+            return
+          }
+
+          // Normalize response to array of items
+          if (data && Array.isArray(data.item)) {
+            if (isMounted) setTableData(data.item)
+          } else {
+            setTableData([])
+          }
+        })
+        .catch((err) => {
+          if (err.name !== 'AbortError') console.error('Fetch error:', err)
+        })
+
+      return () => {
+        isMounted = false
+        controller.abort()
+      }
+    }, 500)
+
+    return () => clearTimeout(delayDebounceFn)
   }, [searchTerm, token])
 
   return (
     <CRow>
       <CCol>
+        {/* Search Bar */}
+        <CInputGroup className="mb-3">
+          <CInputGroupText>
+            <CIcon icon={cilSearch} />
+          </CInputGroupText>
+          <input
+            className="form-control"
+            type="search"
+            placeholder="Search items..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </CInputGroup>
+
+        {/* Results Accordion */}
         <CAccordion flush>
           {tableData.length === 0 ? (
             <div>No items found</div>
           ) : (
-            tableData.map((itemObj, index) => {
-              const item = itemObj.item || itemObj
+            tableData.map((obj, index) => {
+              const item = obj.item
               return (
                 <CAccordionItem key={index}>
                   <CAccordionHeader>

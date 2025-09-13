@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import {
   CContainer,
   CHeader,
@@ -22,13 +21,40 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const [input, setInput] = useState('')
-  const history = useHistory() // React Router v5
 
-  const handleSearch = (e) => {
-    if (e.key === 'Enter' && input.trim() !== '') {
-      history.push(`/search?query=${encodeURIComponent(input.trim())}`)
-    }
-  }
+  // Get your auth token from localStorage, Redux, or props
+  const token = localStorage.getItem('token') || '' // <-- replace if needed
+
+  useEffect(() => {
+    if (!input) return
+
+    const delayDebounceFn = setTimeout(() => {
+      fetch(
+        `https://salusback.geareab.com/item/amount/10/name/${encodeURIComponent(input)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // change header if API expects x-auth-token
+          },
+        }
+      )
+        .then(async (res) => {
+          if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}))
+            console.error('API Error:', res.status, errorData)
+            return
+          }
+          return res.json()
+        })
+        .then((data) => {
+          if (data) console.log('Search API response:', data)
+        })
+        .catch((err) => console.error('Fetch error:', err))
+    }, 500) // debounce 500ms
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [input, token])
 
   return (
     <CHeader position="sticky" className="mb-4 shadow-sm">
@@ -39,11 +65,9 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="xxl" />
         </CHeaderToggler>
-
         <CHeaderBrand className="mx-auto d-md-none" to="/">
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
-
         <CHeaderNav className="flex-fill d-none d-md-block">
           <CInputGroup className="flex-nowrap" size="lg">
             <CInputGroupText id="addon-wrapping">
@@ -55,12 +79,10 @@ const AppHeader = () => {
               placeholder="Search..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleSearch}
               aria-label="default input example"
             />
           </CInputGroup>
         </CHeaderNav>
-
         <CHeaderNav>
           <CNavItem>
             <CNavLink href="#">
@@ -83,7 +105,6 @@ const AppHeader = () => {
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
-
       <CHeaderDivider className="d-md-none" />
       <CContainer fluid className="d-md-none">
         <CHeaderNav className="col-12">
@@ -97,7 +118,6 @@ const AppHeader = () => {
               placeholder="Search..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleSearch}
               aria-label="default input example"
             />
           </CInputGroup>
