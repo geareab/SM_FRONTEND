@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -7,7 +7,6 @@ import {
   CHeaderDivider,
   CHeaderNav,
   CHeaderToggler,
-  CFormInput,
   CInputGroupText,
   CInputGroup,
   CNavLink,
@@ -22,6 +21,10 @@ import { logo } from 'src/assets/brand/logo'
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const [input, setInput] = useState('');
+
+  console.log(input)
+
 
   return (
     <CHeader position="sticky" className="mb-4 shadow-sm">
@@ -38,7 +41,7 @@ const AppHeader = () => {
         <CHeaderNav className=" flex-fill d-none d-md-block">
           <CInputGroup className="flex-nowrap" size="lg">
             <CInputGroupText id="addon-wrapping"><CIcon icon={cilSearch} height={19} /></CInputGroupText>
-            <CFormInput type="search" placeholder="Search..." aria-label="default input example" autoFocus />
+            <input className="form-control" type="search" placeholder="Search..." onChange={e => setInput(e.target.value)} aria-label="default input example" />
           </CInputGroup>
         </CHeaderNav>
         <CHeaderNav>
@@ -68,7 +71,7 @@ const AppHeader = () => {
         <CHeaderNav className="col-12">
           <CInputGroup className="flex-nowrap" >
             <CInputGroupText id="addon-wrapping"><CIcon icon={cilSearch} height={18} /></CInputGroupText>
-            <CFormInput className="form-control" type="search" placeholder="Search..." aria-label="default input example" />
+            <input className="form-control" type="search" placeholder="Search..." onChange={e => setInput(e.target.value)} aria-label="default input example" />
           </CInputGroup>
         </CHeaderNav>
       </CContainer>

@@ -8,7 +8,7 @@ const AppFooter = () => {
         <a href="https://sm.geareab.com" target="_blank" rel="noopener noreferrer">
           GeareAB
         </a>
-        <span className="ms-1">&copy; 2022 Simran Medicos.</span>
+        <span className="ms-1">&copy; 2023. Operated by Uday</span>
       </div>
     </CFooter>
   )
