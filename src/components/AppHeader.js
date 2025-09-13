@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import {
   CContainer,
   CHeader,
@@ -11,7 +12,6 @@ import {
   CInputGroup,
   CNavLink,
   CNavItem,
-
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilEnvelopeOpen, cilList, cilMenu, cilSearch } from '@coreui/icons'
@@ -21,10 +21,14 @@ import { logo } from 'src/assets/brand/logo'
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState('')
+  const history = useHistory() // React Router v5
 
-  console.log(input)
-
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && input.trim() !== '') {
+      history.push(`/search?query=${encodeURIComponent(input.trim())}`)
+    }
+  }
 
   return (
     <CHeader position="sticky" className="mb-4 shadow-sm">
@@ -35,15 +39,28 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="xxl" />
         </CHeaderToggler>
+
         <CHeaderBrand className="mx-auto d-md-none" to="/">
           <CIcon icon={logo} height={48} alt="Logo" />
         </CHeaderBrand>
-        <CHeaderNav className=" flex-fill d-none d-md-block">
+
+        <CHeaderNav className="flex-fill d-none d-md-block">
           <CInputGroup className="flex-nowrap" size="lg">
-            <CInputGroupText id="addon-wrapping"><CIcon icon={cilSearch} height={19} /></CInputGroupText>
-            <input className="form-control" type="search" placeholder="Search..." onChange={e => setInput(e.target.value)} aria-label="default input example" />
+            <CInputGroupText id="addon-wrapping">
+              <CIcon icon={cilSearch} height={19} />
+            </CInputGroupText>
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Search..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleSearch}
+              aria-label="default input example"
+            />
           </CInputGroup>
         </CHeaderNav>
+
         <CHeaderNav>
           <CNavItem>
             <CNavLink href="#">
@@ -66,12 +83,23 @@ const AppHeader = () => {
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
+
       <CHeaderDivider className="d-md-none" />
       <CContainer fluid className="d-md-none">
         <CHeaderNav className="col-12">
-          <CInputGroup className="flex-nowrap" >
-            <CInputGroupText id="addon-wrapping"><CIcon icon={cilSearch} height={18} /></CInputGroupText>
-            <input className="form-control" type="search" placeholder="Search..." onChange={e => setInput(e.target.value)} aria-label="default input example" />
+          <CInputGroup className="flex-nowrap">
+            <CInputGroupText id="addon-wrapping">
+              <CIcon icon={cilSearch} height={18} />
+            </CInputGroupText>
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Search..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleSearch}
+              aria-label="default input example"
+            />
           </CInputGroup>
         </CHeaderNav>
       </CContainer>
