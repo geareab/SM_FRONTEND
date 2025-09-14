@@ -83,20 +83,20 @@ const SearchResults = () => {
                         <CCol>
                           <div className="border-start border-start-4 border-start-success py-1 px-2 mb-1">
                             <div className="fs-9 fw-semibold">{item.name}</div>
-                            <div className="text-medium-emphasis small">{item.company}</div>
+                            <div className="text-medium-emphasis small">{item.company_name}</div>
                           </div>
                         </CCol>
                         <CCol xs lg={6}>
                           <div className="border-start border-start-4 border-start-warning py-1 px-2 mb-1">
-                            <div className="fs-9 fw-semibold align-middle">{item.location}</div>
+                            <div className="fs-9 fw-semibold align-middle">{item.location_name}</div>
                           </div>
                         </CCol>
                       </CRow>
                     </CCol>
                   </CAccordionHeader>
                   <CAccordionBody>
-                    <strong>{item.name}</strong> from <em>{item.company}</em> located at{' '}
-                    <em>{item.location}</em>.
+                    <strong>{item.name}</strong> from <em>{item.company_name}</em> located at{' '}
+                    <em>{item.location_name}</em>.
                   </CAccordionBody>
                 </CAccordionItem>
               )
