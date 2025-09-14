@@ -12,6 +12,7 @@ import {
   cilSpeedometer,
   cilStar,
   cilSearch,
+  cilPlus,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -256,6 +257,16 @@ const _nav = [
     name: 'Widgets',
     to: '/widgets',
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: 'Management',
+  },
+  {
+    component: CNavItem,
+    name: 'Add Medicine',
+    to: '/management/add-medicine',
+    icon: <CIcon icon={cilPlus} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
